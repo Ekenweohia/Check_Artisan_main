@@ -52,12 +52,12 @@ class RegisterArtisan extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 50),
                         const Divider(
                           color: Colors.black,
                           thickness: 1.0,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 70),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(

@@ -1,3 +1,5 @@
+import 'package:check_artisan/profile/Change_password.dart';
+import 'package:check_artisan/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -57,10 +59,13 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20.0),
             ProfileOption(
               text: 'Edit Profile',
-              iconPath:
-                  'assets/Buttons/edit.png', // Replace with your custom icon path
+              iconPath: 'assets/Buttons/edit.png',
               onTap: () {
-                // Handle Edit Profile tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EditProfileScreen()),
+                );
               },
             ),
             const SizedBox(height: 20.0),
@@ -69,7 +74,11 @@ class ProfileScreen extends StatelessWidget {
               iconPath:
                   'assets/Buttons/password.png', // Replace with your custom icon path
               onTap: () {
-                // Handle Change Password tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChangePassword()),
+                );
               },
             ),
             const SizedBox(height: 20.0),
@@ -86,24 +95,19 @@ class ProfileScreen extends StatelessWidget {
               text: 'Update',
               iconPath:
                   'assets/Buttons/update.png', // Replace with your custom icon path
-              onTap: () {
-                // Handle Update tap
-              },
+              onTap: () {},
             ),
             const SizedBox(height: 20.0),
             ProfileOption(
               text: 'Log Out',
-              iconPath:
-                  'assets/Buttons/logout.png', // Replace with your custom icon path
-              onTap: () {
-                // Handle Log Out tap
-              },
+              iconPath: 'assets/Buttons/logout.png',
+              onTap: () {},
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3, // Assuming the Profile tab is the fourth one
+        currentIndex: 3,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -129,13 +133,13 @@ class ProfileScreen extends StatelessWidget {
 
 class ProfileOption extends StatelessWidget {
   final String text;
-  final String iconPath; // Custom icon path
+  final String iconPath;
   final VoidCallback onTap;
 
   const ProfileOption({
     Key? key,
     required this.text,
-    required this.iconPath, // Custom icon path
+    required this.iconPath,
     required this.onTap,
   }) : super(key: key);
 
@@ -150,7 +154,7 @@ class ProfileOption extends StatelessWidget {
         elevation: 4,
         child: ListTile(
           title: Text(text),
-          trailing: Image.asset(iconPath, width: 24, height: 24), // Custom icon
+          trailing: Image.asset(iconPath, width: 24, height: 24),
           onTap: onTap,
         ),
       ),

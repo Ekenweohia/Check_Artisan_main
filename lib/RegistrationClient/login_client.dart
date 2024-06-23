@@ -1,3 +1,4 @@
+import 'package:check_artisan/RegistrationClient/register_client.dart';
 import 'package:check_artisan/VerificationClient/Password_reset.dart';
 import 'package:flutter/material.dart';
 
@@ -99,8 +100,8 @@ class LoginClientState extends State<LoginClient> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PasswordReset()),
+                                  builder: (context) => const PasswordReset(),
+                                ),
                               );
                             },
                             child: const Text(
@@ -186,11 +187,21 @@ class LoginClientState extends State<LoginClient> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Text(
-                          'Don’t Have an account? SIGN UP',
-                          style: TextStyle(
-                            color: Color(0xFF004D40),
-                            fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterClient(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Don’t Have an account? SIGN UP',
+                            style: TextStyle(
+                              color: Color(0xFF004D40),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

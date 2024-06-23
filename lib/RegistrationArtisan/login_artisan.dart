@@ -1,3 +1,5 @@
+import 'package:check_artisan/Artisan_DetailsScreens/Artisan_Dashboard.dart';
+import 'package:check_artisan/RegistrationClient/register_client.dart';
 import 'package:check_artisan/VerificationClient/Password_reset.dart';
 import 'package:flutter/material.dart';
 
@@ -99,8 +101,8 @@ class LoginArtisanState extends State<LoginArtisan> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PasswordReset()),
+                                  builder: (context) => const PasswordReset(),
+                                ),
                               );
                             },
                             child: const Text(
@@ -113,7 +115,15 @@ class LoginArtisanState extends State<LoginArtisan> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ArtisanDashboard(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF004D40),
                               foregroundColor: Colors.white,
@@ -186,11 +196,21 @@ class LoginArtisanState extends State<LoginArtisan> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Text(
-                          'Don’t Have an account? SIGN UP',
-                          style: TextStyle(
-                            color: Color(0xFF004D40),
-                            fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterClient(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Don’t Have an account? SIGN UP',
+                            style: TextStyle(
+                              color: Color(0xFF004D40),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

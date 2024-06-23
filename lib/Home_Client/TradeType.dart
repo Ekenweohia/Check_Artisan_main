@@ -1,6 +1,5 @@
 import 'package:check_artisan/Artisan_DetailsScreens/ArtisanListScreen.dart';
 import 'package:flutter/material.dart';
-// Import the file where ArtisanListScreen is defined
 
 class TradeTypeScreen extends StatelessWidget {
   final List<String> trades = [
