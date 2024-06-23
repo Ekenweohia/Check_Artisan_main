@@ -1,4 +1,4 @@
-import 'package:check_artisan/Home_Client/homeclient.dart';
+import 'package:check_artisan/loginsignupclient/home_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -28,7 +28,7 @@ class IDVerificationState extends State<IDVerification> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          //title: const Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: [
             TextButton(
@@ -50,7 +50,7 @@ class IDVerificationState extends State<IDVerification> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeClient(), // Navigate to HomeClient
+          builder: (context) => const HomeScreen(),
         ),
       );
     }
