@@ -6,7 +6,7 @@ class Job extends Equatable {
   final String status;
   final DateTime postedDate;
 
-  Job({
+  const Job({
     required this.title,
     required this.location,
     required this.status,

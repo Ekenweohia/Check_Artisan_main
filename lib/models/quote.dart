@@ -1,4 +1,3 @@
-// lib/models/quote.dart
 import 'package:equatable/equatable.dart';
 
 class Quote extends Equatable {
@@ -7,7 +6,7 @@ class Quote extends Equatable {
   final String budget;
   final DateTime postedDate;
 
-  Quote({
+  const Quote({
     required this.title,
     required this.location,
     required this.budget,

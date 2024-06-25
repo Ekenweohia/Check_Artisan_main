@@ -14,14 +14,13 @@ class HomeClient extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              // Navigate to Home screen or do nothing as it is the current screen
               break;
             case 1:
-              // Navigate to Location screen
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => const LocationScreen()));
+
+              //Navigator.push(context, MaterialPageRoute(builder: (context) => const LocationScreen()));
               break;
             case 2:
-              // Navigate to Settings screen
+
               // Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
               break;
             case 3:

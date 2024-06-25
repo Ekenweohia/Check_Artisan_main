@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-// Review Model
 class Review extends Equatable {
   final String title;
   final String content;
   final String reviewer;
   final DateTime reviewDate;
 
-  Review({
+  const Review({
     required this.title,
     required this.content,
     required this.reviewer,
@@ -18,9 +19,17 @@ class Review extends Equatable {
 
   @override
   List<Object> get props => [title, content, reviewer, reviewDate];
+
+  factory Review.fromJson(Map<String, dynamic> json) {
+    return Review(
+      title: json['title'],
+      content: json['content'],
+      reviewer: json['reviewer'],
+      reviewDate: DateTime.parse(json['reviewDate']),
+    );
+  }
 }
 
-// Review Event
 abstract class ReviewEvent extends Equatable {
   const ReviewEvent();
 
@@ -30,7 +39,6 @@ abstract class ReviewEvent extends Equatable {
 
 class FetchReviews extends ReviewEvent {}
 
-// Review State
 abstract class ReviewState extends Equatable {
   const ReviewState();
 
@@ -51,31 +59,22 @@ class ReviewLoaded extends ReviewState {
 
 class ReviewError extends ReviewState {}
 
-// Review Bloc
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ReviewBloc() : super(ReviewLoading()) {
     on<FetchReviews>((event, emit) async {
-      // Simulate a network request
-      await Future.delayed(Duration(seconds: 2));
+      emit(ReviewLoading());
+      await Future.delayed(const Duration(seconds: 2));
       try {
-        // Replace with your data fetching logic
-        final reviews = [
-          Review(
-            title: 'Food',
-            content: 'Wonderful service',
-            reviewer: 'Irozuru',
-            reviewDate: DateTime.parse('2024-05-01T13:12:15.000000Z'),
-          ),
-          Review(
-            title: 'Wedding Planner',
-            content:
-                'A good vendor to work with. My wedding was a huge success. Thanks to your glorious team from Heaven. When I marry next I will still use you guys.',
-            reviewer: 'Irozuru',
-            reviewDate: DateTime.parse('2024-05-01T13:12:15.000000Z'),
-          ),
-          // Add more reviews here
-        ];
-        emit(ReviewLoaded(reviews));
+        final response =
+            await http.get(Uri.parse('https://api.example.com/reviews'));
+        if (response.statusCode == 200) {
+          final List<dynamic> data = json.decode(response.body);
+          final reviews =
+              data.map((reviewJson) => Review.fromJson(reviewJson)).toList();
+          emit(ReviewLoaded(reviews));
+        } else {
+          emit(ReviewError());
+        }
       } catch (e) {
         emit(ReviewError());
       }
@@ -83,27 +82,28 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   }
 }
 
-// Reviews Screen
 class ReviewsScreen extends StatelessWidget {
+  const ReviewsScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReviewBloc()..add(FetchReviews()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Reviews'),
+          title: const Text('Reviews'),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.notifications),
-              onPressed: () {
-                // Handle notifications
-              },
+              icon: const Icon(Icons.notifications),
+              onPressed: () {},
             ),
           ],
         ),
@@ -114,47 +114,45 @@ class ReviewsScreen extends StatelessWidget {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                onChanged: (value) {
-                  // Handle search
-                },
+                onChanged: (value) {},
               ),
             ),
             Expanded(
               child: BlocBuilder<ReviewBloc, ReviewState>(
                 builder: (context, state) {
                   if (state is ReviewLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is ReviewLoaded) {
                     return ListView.separated(
                       itemCount: state.reviews.length,
-                      separatorBuilder: (context, index) => Divider(),
+                      separatorBuilder: (context, index) => const Divider(),
                       itemBuilder: (context, index) {
                         final review = state.reviews[index];
                         return ListTile(
                           title: Row(
                             children: [
-                              Icon(Icons.thumb_up, color: Colors.teal),
-                              SizedBox(width: 8),
+                              const Icon(Icons.thumb_up, color: Colors.teal),
+                              const SizedBox(width: 8),
                               Text(review.title,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(review.content),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Icon(Icons.star,
+                                  const Icon(Icons.star,
                                       color: Colors.amber, size: 16),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                       'Reviewed by ${review.reviewer} on ${review.reviewDate.toIso8601String()}'),
                                 ],
@@ -165,7 +163,7 @@ class ReviewsScreen extends StatelessWidget {
                       },
                     );
                   } else if (state is ReviewError) {
-                    return Center(child: Text('Failed to fetch reviews'));
+                    return const Center(child: Text('Failed to fetch reviews'));
                   }
                   return Container();
                 },

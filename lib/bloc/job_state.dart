@@ -1,4 +1,3 @@
-// lib/bloc/job_state.dart
 import 'package:equatable/equatable.dart';
 import '../models/job.dart';
 

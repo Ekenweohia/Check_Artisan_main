@@ -1,7 +1,94 @@
 import 'package:check_artisan/loginsignupclient/home_Screen.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
+abstract class IDVerificationEvent extends Equatable {
+  const IDVerificationEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UploadDocument extends IDVerificationEvent {
+  final File document;
+
+  const UploadDocument(this.document);
+
+  @override
+  List<Object> get props => [document];
+}
+
+abstract class IDVerificationStatus extends Equatable {
+  const IDVerificationStatus();
+
+  @override
+  List<Object> get props => [];
+}
+
+class IDVerificationInitial extends IDVerificationStatus {}
+
+class IDVerificationLoading extends IDVerificationStatus {}
+
+class IDVerificationSuccess extends IDVerificationStatus {}
+
+class IDVerificationFailure extends IDVerificationStatus {
+  final String error;
+
+  const IDVerificationFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
+class IDVerificationBloc
+    extends Bloc<IDVerificationEvent, IDVerificationStatus> {
+  final bool useApi;
+
+  IDVerificationBloc({this.useApi = false}) : super(IDVerificationInitial()) {
+    on<UploadDocument>(_onUploadDocument);
+  }
+
+  Future<void> _onUploadDocument(
+      UploadDocument event, Emitter<IDVerificationStatus> emit) async {
+    emit(IDVerificationLoading());
+
+    try {
+      if (useApi) {
+        final bytes = await event.document.readAsBytes();
+        final base64Image = base64Encode(bytes);
+
+        final response = await http.post(
+          Uri.parse(''),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'document': base64Image,
+            'fileName': event.document.path.split('/').last,
+            'fileType': 'image/${event.document.path.split('.').last}',
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          emit(IDVerificationSuccess());
+        } else {
+          final error = jsonDecode(response.body)['error'];
+          emit(IDVerificationFailure(error));
+        }
+      } else {
+        await Future.delayed(const Duration(seconds: 1));
+        emit(IDVerificationSuccess());
+      }
+    } catch (e) {
+      emit(IDVerificationFailure(e.toString()));
+    }
+  }
+}
 
 class IDVerification extends StatefulWidget {
   const IDVerification({Key? key}) : super(key: key);
@@ -47,12 +134,7 @@ class IDVerificationState extends State<IDVerification> {
     if (_selectedFile == null) {
       _showErrorDialog('Please upload a document to continue.');
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+      context.read<IDVerificationBloc>().add(UploadDocument(_selectedFile!));
     }
   }
 
@@ -135,47 +217,63 @@ class IDVerificationState extends State<IDVerification> {
                 ),
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF004D40),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 30),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        side: const BorderSide(color: Color(0xFF004D40)),
+              BlocConsumer<IDVerificationBloc, IDVerificationStatus>(
+                listener: (context, state) {
+                  if (state is IDVerificationSuccess) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
                       ),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    );
+                  } else if (state is IDVerificationFailure) {
+                    _showErrorDialog(state.error);
+                  }
+                },
+                builder: (context, state) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF004D40),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            side: const BorderSide(color: Color(0xFF004D40)),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: const Text('Previous'),
                       ),
-                    ),
-                    child: const Text('Previous'),
-                  ),
-                  ElevatedButton(
-                    onPressed: _continue,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF004D40),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 30),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+                      ElevatedButton(
+                        onPressed: _continue,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF004D40),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: const Text('Continue'),
                       ),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    child: const Text('Continue'),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ],
           ),

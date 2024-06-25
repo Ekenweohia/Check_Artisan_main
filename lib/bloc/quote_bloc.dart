@@ -1,4 +1,3 @@
-// lib/bloc/quote_bloc.dart
 import 'package:bloc/bloc.dart';
 import '../models/quote.dart';
 import 'quote_event.dart';
@@ -7,8 +6,7 @@ import 'quote_state.dart';
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   QuoteBloc() : super(QuoteLoading()) {
     on<FetchQuotes>((event, emit) async {
-      // Simulate a network request
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       try {
         // Replace with your data fetching logic
         final quotes = List.generate(

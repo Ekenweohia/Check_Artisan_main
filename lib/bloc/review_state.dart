@@ -1,4 +1,4 @@
-// lib/bloc/review_state.dart
+
 import 'package:equatable/equatable.dart';
 import '../models/review.dart';
 
