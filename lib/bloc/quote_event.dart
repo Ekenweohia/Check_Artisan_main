@@ -1,4 +1,3 @@
-// lib/bloc/quote_event.dart
 import 'package:equatable/equatable.dart';
 
 abstract class QuoteEvent extends Equatable {

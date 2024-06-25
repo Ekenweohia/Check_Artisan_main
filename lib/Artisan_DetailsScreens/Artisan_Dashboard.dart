@@ -185,15 +185,15 @@ class ArtisanDashboard extends StatelessWidget {
             break;
           case 'JobListsScreen':
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => JobListScreen()));
+                MaterialPageRoute(builder: (context) => const JobListScreen()));
             break;
           case 'ReviewsScreen':
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ReviewsScreen()));
+                MaterialPageRoute(builder: (context) => const ReviewsScreen()));
             break;
           case 'QuotesScreen':
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => QuoteRequestsScreen()));
+                MaterialPageRoute(builder: (context) => const QuoteRequestsScreen()));
             break;
         }
       },

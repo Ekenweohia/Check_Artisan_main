@@ -1,4 +1,3 @@
-// lib/bloc/quote_state.dart
 import 'package:equatable/equatable.dart';
 import '../models/quote.dart';
 

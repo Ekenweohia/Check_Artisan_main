@@ -1,4 +1,3 @@
-// lib/bloc/job_event.dart
 import 'package:equatable/equatable.dart';
 
 abstract class JobEvent extends Equatable {

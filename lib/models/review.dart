@@ -1,4 +1,3 @@
-// lib/models/review.dart
 import 'package:equatable/equatable.dart';
 
 class Review extends Equatable {
@@ -7,7 +6,7 @@ class Review extends Equatable {
   final String reviewer;
   final DateTime reviewDate;
 
-  Review({
+  const Review({
     required this.title,
     required this.content,
     required this.reviewer,

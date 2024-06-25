@@ -71,21 +71,19 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20.0),
             ProfileOption(
               text: 'Change Password',
-              iconPath:
-                  'assets/Buttons/password.png', // Replace with your custom icon path
+              iconPath: 'assets/Buttons/password.png',
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ChangePassword()),
+                      builder: (context) => const ChangePasswordScreen()),
                 );
               },
             ),
             const SizedBox(height: 20.0),
             ProfileOption(
               text: 'Information',
-              iconPath:
-                  'assets/Buttons/info.png', // Replace with your custom icon path
+              iconPath: 'assets/Buttons/info.png',
               onTap: () {
                 // Handle Information tap
               },
@@ -93,8 +91,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20.0),
             ProfileOption(
               text: 'Update',
-              iconPath:
-                  'assets/Buttons/update.png', // Replace with your custom icon path
+              iconPath: 'assets/Buttons/update.png',
               onTap: () {},
             ),
             const SizedBox(height: 20.0),

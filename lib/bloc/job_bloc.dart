@@ -1,4 +1,3 @@
-// lib/bloc/job_bloc.dart
 import 'package:bloc/bloc.dart';
 import '../models/job.dart';
 import 'job_event.dart';
@@ -7,10 +6,8 @@ import 'job_state.dart';
 class JobBloc extends Bloc<JobEvent, JobState> {
   JobBloc() : super(JobLoading()) {
     on<FetchJobs>((event, emit) async {
-      // Simulate a network request
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       try {
-        // Use the provided job titles
         final jobs = [
           Job(
             title: 'Aluminium Maker',
