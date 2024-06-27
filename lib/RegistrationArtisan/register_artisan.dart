@@ -1,5 +1,5 @@
+import 'package:check_artisan/RegistrationArtisan/phone_artisan.dart';
 import 'package:check_artisan/RegistrationClient/email_client.dart';
-import 'package:check_artisan/RegistrationClient/phone_client.dart';
 import 'package:flutter/material.dart';
 
 class RegisterArtisan extends StatelessWidget {
@@ -107,7 +107,7 @@ class RegisterArtisan extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const PhoneClient()),
+                                  builder: (context) => const PhoneArtisan()),
                             );
                           },
                           style: ElevatedButton.styleFrom(

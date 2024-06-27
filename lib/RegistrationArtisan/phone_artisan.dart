@@ -431,7 +431,7 @@ class PhoneArtisanState extends State<PhoneArtisan> {
                                                 BorderSide(color: Colors.grey),
                                           ),
                                           textStyle: const TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

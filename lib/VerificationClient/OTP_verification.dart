@@ -1,4 +1,4 @@
-import 'package:check_artisan/profile/complete_profile_artisan.dart';
+import 'package:check_artisan/Home_Client/homeclient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -222,7 +222,7 @@ class OTPVerificationScreenState extends State<OTPVerificationScreen>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CompleteProfile()),
+                            builder: (context) => const HomeClient()),
                       );
                     } else if (state is OTPVerificationFailure) {
                       ScaffoldMessenger.of(context).showSnackBar(

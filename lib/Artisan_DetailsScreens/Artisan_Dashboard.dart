@@ -2,7 +2,6 @@ import 'package:check_artisan/Jobs/Job_list_screen.dart';
 import 'package:check_artisan/Jobs/Quote_request_screen.dart';
 import 'package:check_artisan/Jobs/reviews_screen.dart';
 import 'package:check_artisan/profile/profile.dart';
-
 import 'package:flutter/material.dart';
 
 class ArtisanDashboard extends StatelessWidget {
@@ -97,7 +96,7 @@ class ArtisanDashboard extends StatelessWidget {
                 child: Stack(
                   children: [
                     Image.asset(
-                      'assets/images/Rectangle 444.png',
+                      'assets/icons/dashboard.png',
                       width: double.infinity,
                       height: 120,
                       fit: BoxFit.cover,
@@ -192,8 +191,10 @@ class ArtisanDashboard extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const ReviewsScreen()));
             break;
           case 'QuotesScreen':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const QuoteRequestsScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const QuoteRequestsScreen()));
             break;
         }
       },
