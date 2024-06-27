@@ -1,6 +1,4 @@
-import 'package:check_artisan/Artisan_DetailsScreens/Artisan_Dashboard.dart';
-import 'package:check_artisan/RegistrationClient/register_client.dart';
-import 'package:check_artisan/VerificationClient/Password_reset.dart';
+import 'package:check_artisan/RegistrationArtisan/register_artisan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:check_artisan/Artisan_DetailsScreens/Artisan_Dashboard.dart';
+import 'package:check_artisan/VerificationClient/Password_reset.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
@@ -376,7 +376,7 @@ class LoginArtisanState extends State<LoginArtisan> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const RegisterClient(),
+                                          const RegisterArtisan(),
                                     ),
                                   );
                                 },

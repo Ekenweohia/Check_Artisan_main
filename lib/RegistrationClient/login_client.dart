@@ -357,7 +357,7 @@ class LoginClientState extends State<LoginClient> {
                                                 BorderSide(color: Colors.grey),
                                           ),
                                           textStyle: const TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

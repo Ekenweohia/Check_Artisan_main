@@ -1,6 +1,10 @@
+import 'package:check_artisan/RegistrationClient/login_client.dart';
+import 'package:check_artisan/profile/notification.dart';
+import 'package:flutter/material.dart';
+import 'package:check_artisan/Home_Client/homeclient.dart';
 import 'package:check_artisan/profile/Change_password.dart';
 import 'package:check_artisan/profile/edit_profile.dart';
-import 'package:flutter/material.dart';
+import 'package:check_artisan/profile/info.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -25,7 +29,13 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8.0),
             child: IconButton(
               icon: const Icon(Icons.notifications),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ArtisanScreen()),
+                );
+              },
             ),
           ),
         ],
@@ -85,7 +95,11 @@ class ProfileScreen extends StatelessWidget {
               text: 'Information',
               iconPath: 'assets/Buttons/info.png',
               onTap: () {
-                // Handle Information tap
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const InformationScreen()),
+                );
               },
             ),
             const SizedBox(height: 20.0),
@@ -98,31 +112,56 @@ class ProfileScreen extends StatelessWidget {
             ProfileOption(
               text: 'Log Out',
               iconPath: 'assets/Buttons/logout.png',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginClient()),
+                );
+              },
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeClient()),
+              );
+              break;
+            case 1:
+              // Navigate to Location screen
+              break;
+            case 2:
+              // Navigate to Settings screen
+              break;
+            case 3:
+              // Current screen is Profile, no need to navigate
+              break;
+          }
+        },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Color(0xFF004D40)),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
+            icon: Icon(Icons.location_on, color: Color(0xFF004D40)),
             label: 'Location',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.build, color: Color(0xFF004D40)),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.person, color: Color(0xFF004D40)),
             label: 'Profile',
           ),
         ],
+        selectedItemColor: const Color(0xFF004D40),
+        unselectedItemColor: Colors.grey,
       ),
     );
   }

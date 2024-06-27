@@ -1,98 +1,8 @@
+import 'package:check_artisan/RegistrationClient/login_client.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// Define Events
-abstract class PasswordEvent extends Equatable {
-  const PasswordEvent();
-
-  @override
-  List<Object> get props => [];
-}
-
-class ChangePasswordEvent extends PasswordEvent {
-  final String oldPassword;
-  final String newPassword;
-  final String confirmPassword;
-
-  const ChangePasswordEvent({
-    required this.oldPassword,
-    required this.newPassword,
-    required this.confirmPassword,
-  });
-
-  @override
-  List<Object> get props => [oldPassword, newPassword, confirmPassword];
-}
-
-// Define States
-abstract class PasswordState extends Equatable {
-  const PasswordState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class PasswordInitial extends PasswordState {}
-
-class PasswordLoading extends PasswordState {}
-
-class PasswordChanged extends PasswordState {}
-
-class PasswordError extends PasswordState {
-  final String error;
-
-  const PasswordError(this.error);
-
-  @override
-  List<Object> get props => [error];
-}
-
-// Define BLoC
-class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
-  final bool useApi;
-
-  PasswordBloc({this.useApi = false}) : super(PasswordInitial()) {
-    on<ChangePasswordEvent>(_onChangePassword);
-  }
-
-  Future<void> _onChangePassword(
-      ChangePasswordEvent event, Emitter<PasswordState> emit) async {
-    emit(PasswordLoading());
-
-    try {
-      if (useApi) {
-        final response = await http.post(
-          Uri.parse('https://yourapiendpoint.com/change_password'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(<String, dynamic>{
-            'oldPassword': event.oldPassword,
-            'newPassword': event.newPassword,
-            'confirmPassword': event.confirmPassword,
-          }),
-        );
-
-        if (response.statusCode == 200) {
-          emit(PasswordChanged());
-        } else {
-          emit(const PasswordError('Failed to change password'));
-        }
-      } else {
-        // Simulate successful password change
-        await Future.delayed(const Duration(seconds: 1));
-        emit(PasswordChanged());
-      }
-    } catch (e) {
-      emit(PasswordError(e.toString()));
-    }
-  }
-}
-
-// Define ChangePasswordScreen
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
 
@@ -108,15 +18,71 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
+  bool useApi = false; // Set this to true to enable API integration
 
-  void _changePassword() {
-    context.read<PasswordBloc>().add(
-          ChangePasswordEvent(
-            oldPassword: _oldPasswordController.text,
-            newPassword: _newPasswordController.text,
-            confirmPassword: _confirmPasswordController.text,
-          ),
+  void _changePassword() async {
+    final oldPassword = _oldPasswordController.text;
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (newPassword != confirmPassword) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('New password and confirm password do not match')),
         );
+      }
+      return;
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Changing password...')),
+      );
+    }
+
+    if (useApi) {
+      // Simulating API call
+      final response = await http.post(
+        Uri.parse('YOUR_API_URL_HERE'), // Replace with your API URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'oldPassword': oldPassword,
+          'newPassword': newPassword,
+        }),
+      );
+
+      if (mounted) {
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password changed successfully')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginClient()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('Failed to change password: ${response.body}')),
+          );
+        }
+      }
+    } else {
+      // Simulating successful password change without API
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password changed successfully')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginClient()),
+        );
+      }
+    }
   }
 
   @override
@@ -143,6 +109,7 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
             icon: const Icon(Icons.notifications),
             onPressed: () {},
           ),
+          const SizedBox(width: 16), // Add a SizedBox for spacing
         ],
       ),
       body: Padding(
@@ -182,8 +149,7 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 labelText: 'New Password',
                 hintStyle: const TextStyle(color: Color(0xFF004D40)),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                    borderRadius: BorderRadius.circular(12.0)),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureNewPassword
@@ -218,8 +184,7 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
               decoration: InputDecoration(
                 labelText: 'Confirm Password',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                    borderRadius: BorderRadius.circular(12.0)),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureConfirmPassword
@@ -236,41 +201,22 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
               style: const TextStyle(color: Color(0xFF004D40)),
             ),
             const SizedBox(height: 32),
-            BlocConsumer<PasswordBloc, PasswordState>(
-              listener: (context, state) {
-                if (state is PasswordChanged) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Password changed successfully!')),
-                  );
-                } else if (state is PasswordError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${state.error}')),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is PasswordLoading) {
-                  return const CircularProgressIndicator();
-                }
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _changePassword,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF004D40),
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'SAVE',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _changePassword,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF004D40),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
-                );
-              },
+                ),
+                child: const Text(
+                  'SAVE',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),

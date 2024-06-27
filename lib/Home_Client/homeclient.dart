@@ -1,5 +1,6 @@
 import 'package:check_artisan/Artisan_DetailsScreens/ArtisanListScreen.dart';
 import 'package:check_artisan/Home_Client/TradeType.dart';
+import 'package:check_artisan/profile/notification.dart';
 import 'package:check_artisan/profile/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -83,7 +84,12 @@ class HomeClientContent extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ArtisanScreen()),
+              );
+            },
           ),
         ],
       ),

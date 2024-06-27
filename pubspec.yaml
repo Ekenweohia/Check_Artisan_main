@@ -1,6 +1,5 @@
 name: check_artisan
 description: A new Flutter project.
-
 version: 1.0.0+1
 
 environment:
@@ -17,6 +16,7 @@ dependencies:
   http: ^1.2.0
   google_sign_in: ^6.1.4
   flutter_facebook_auth: ^7.0.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +25,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
     - assets/icons/Home Screen.png
     - assets/icons/logo checkartisan 1.png
@@ -39,6 +40,7 @@ flutter:
     - assets/icons/confirmation.png
     - assets/icons/otp.png
     - assets/icons/password_reset.png
+    - assets/icons/dashboard.png
     - assets/Buttons/edit.png
     - assets/Buttons/info.png
     - assets/Buttons/logout.png

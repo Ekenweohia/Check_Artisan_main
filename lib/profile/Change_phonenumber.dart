@@ -199,7 +199,7 @@ class ChangePhoneNumberScreenState extends State<ChangePhoneNumberScreen> {
                       ),
                     ),
                     child: const Text(
-                      'GENERATE OTP',
+                      'SAVE',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Define Review model
 class Review extends Equatable {
   final String title;
   final String content;
@@ -30,6 +31,7 @@ class Review extends Equatable {
   }
 }
 
+// Define Events
 abstract class ReviewEvent extends Equatable {
   const ReviewEvent();
 
@@ -39,6 +41,7 @@ abstract class ReviewEvent extends Equatable {
 
 class FetchReviews extends ReviewEvent {}
 
+// Define States
 abstract class ReviewState extends Equatable {
   const ReviewState();
 
@@ -59,21 +62,40 @@ class ReviewLoaded extends ReviewState {
 
 class ReviewError extends ReviewState {}
 
+// Define BLoC
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
-  ReviewBloc() : super(ReviewLoading()) {
+  final bool useApi;
+
+  ReviewBloc({this.useApi = false}) : super(ReviewLoading()) {
     on<FetchReviews>((event, emit) async {
       emit(ReviewLoading());
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       try {
-        final response =
-            await http.get(Uri.parse('https://api.example.com/reviews'));
-        if (response.statusCode == 200) {
-          final List<dynamic> data = json.decode(response.body);
-          final reviews =
-              data.map((reviewJson) => Review.fromJson(reviewJson)).toList();
-          emit(ReviewLoaded(reviews));
+        if (useApi) {
+          final response = await http.get(Uri.parse(''));
+
+          if (response.statusCode == 200) {
+            final List<dynamic> data = json.decode(response.body);
+            final reviews =
+                data.map((reviewJson) => Review.fromJson(reviewJson)).toList();
+            emit(ReviewLoaded(reviews));
+          } else {
+            emit(ReviewError());
+          }
         } else {
-          emit(ReviewError());
+          // Placeholder data
+          final reviews = List<Review>.generate(
+            2,
+            (index) => Review(
+              title: index == 0 ? 'Food' : 'Wedding Planner',
+              content: index == 0
+                  ? 'Wonderful service'
+                  : 'A good vendor to work with. My wedding was a huge success. Thanks to your glorious team from Heaven. When I marry next I will still use you guys.',
+              reviewer: 'Irozuru',
+              reviewDate: DateTime.now(),
+            ),
+          );
+          emit(ReviewLoaded(reviews));
         }
       } catch (e) {
         emit(ReviewError());
@@ -83,17 +105,21 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 }
 
 class ReviewsScreen extends StatelessWidget {
-  const ReviewsScreen({
-    Key? key,
-  }) : super(key: key);
+  final bool useApi;
+
+  const ReviewsScreen({Key? key, this.useApi = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReviewBloc()..add(FetchReviews()),
+      create: (context) => ReviewBloc(useApi: useApi)..add(FetchReviews()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Reviews'),
+          title: const Text(
+            'Reviews',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -138,9 +164,11 @@ class ReviewsScreen extends StatelessWidget {
                             children: [
                               const Icon(Icons.thumb_up, color: Colors.teal),
                               const SizedBox(width: 8),
-                              Text(review.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                review.title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ],
                           ),
                           subtitle: Column(
@@ -151,7 +179,7 @@ class ReviewsScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   const Icon(Icons.star,
-                                      color: Colors.amber, size: 16),
+                                      color: Colors.amber, size: 13),
                                   const SizedBox(width: 4),
                                   Text(
                                       'Reviewed by ${review.reviewer} on ${review.reviewDate.toIso8601String()}'),
